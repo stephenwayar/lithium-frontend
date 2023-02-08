@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Nav from '@/components/nav'
 
 export default function Home() {
   return (
@@ -10,9 +11,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div>
-        <h1 className="text-3xl font-bold underline">
-          Hello world!
-        </h1>
+        <Nav />
       </div>
     </>
   )
