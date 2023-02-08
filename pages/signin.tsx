@@ -192,6 +192,12 @@ export default function Signin({ tokenExpired } : any){
                   isLoading ? <Icon className="mx-auto animate-spin" icon="icomoon-free:spinner2" color="white" /> : 'Signin'
                 }
               </button>
+
+              <div className="flex text-gray-700 mt-3 justify-center space-x-2">
+                <p>Dont have an account?</p>
+
+                <Link className="hover:underline" href='/signup'>Signup</Link>
+              </div>
             </div>
           </form>
         </div>
