@@ -22,8 +22,13 @@ After you have completed the task, please send us a .zip file of the repo, but f
 
 **Your name**
 
-`________________`
+`Stephen Wayar Bulus`
 
 **Why did you choose the tech you did?**
 
-`Don't worry about detailing every single package used, but try and justify some of your choices and your reason for making them. We want people who think in features, and how they impact the wider systems going forward, so we expect you to make reasoned decisions with intent!`
+`I used Next.js as the UI library because it provides a simple setup for server-rendered React applications with optimized performance and easy-to-use routing.
+
+For my design system, I used TailwindCSS because it provides a highly composable and utility-first CSS framework for quickly building custom user interfaces. It allows for fast prototyping and development of custom styles with a small footprint and high performance.
+
+And of course Typescript as a strict language as instructed.
+`
