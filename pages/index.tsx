@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Nav from '@/components/nav'
 
-export default function Home() {
+export default function Home({ tokenExpired }) {
   return (
     <>
       <Head>
@@ -11,8 +11,43 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div>
-        <Nav />
+        <Nav tokenExpired={tokenExpired}/>
+
+        <div className='flex justify-center mt-10 text-3xl text-gray-700 font-mono'>
+          <h1>Hello Welcome to Lithium Home Page</h1>
+        </div>
       </div>
     </>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  const userStr = context.req.cookies['lithium_user']
+
+  if(userStr){
+    const userEden = JSON.parse(userStr)
+    const now = new Date()
+
+    if(now.getTime() > userEden.expiry){
+      // token is expired
+      return {
+        props: { 
+          tokenExpired: true
+        } 
+      }
+    }else{
+      // user is still logged in
+      return{
+        props: { 
+          tokenExpired: false
+        }
+      }
+    }
+  }else{
+    return{
+      props: {
+        tokenExpired: true
+      }
+    }
+  }
 }

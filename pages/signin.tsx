@@ -1,12 +1,13 @@
 import Head from "next/head"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { signin } from "../services/auth"
 import cookie from "cookiejs"
 import toast, { Toaster } from 'react-hot-toast';
 import Router from "next/router";
 import { Icon } from '@iconify/react';
+import Link from "next/link";
 
-export default function Signin(){
+export default function Signin({ tokenExpired } : any){
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -18,6 +19,13 @@ export default function Signin(){
     email: '',
     password: ''
   })
+
+  useEffect(() => {
+    if(tokenExpired){
+      cookie.remove('lithium_user')
+      window.localStorage.removeItem('lithium_user')
+    }
+  }, [])
 
   const handleSignin = async (e: any) => {
     e.preventDefault()
@@ -80,7 +88,7 @@ export default function Signin(){
           expiry: now.getTime() + 86400000
         }
 
-        cookie.set('eden_user', JSON.stringify(userObj), 1)
+        cookie.set('lithium_user', JSON.stringify(userObj), 1)
         window.localStorage.setItem('lithium_user', JSON.stringify(userObj))
 
         toast('Signin Success',
@@ -151,7 +159,11 @@ export default function Signin(){
 
       <Toaster position="bottom-right" reverseOrder={false}/>
 
-      <h1 className="text-gray-700 font-semibold text-3xl mt-16 sm:mt-20 text-center">Lithium</h1>
+      <div className="flex justify-center">
+        <Link href='/'>
+          <h1 className="text-gray-700 w-fit font-semibold text-3xl mt-16 sm:mt-20">Lithium</h1>
+        </Link>
+      </div>
 
       <div className="flex justify-center mx-5 mt-10 sm:mx-10">
         <div className="shadow-md border rounded-md w-full max-w-[35rem] p-4 md:p-8">
@@ -186,4 +198,37 @@ export default function Signin(){
       </div>
     </div>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  const userStr = context.req.cookies['lithium_user']
+
+  console.log(userStr)
+  if(userStr){
+    const userLithium = JSON.parse(userStr)
+    const now = new Date()
+
+    if(now.getTime() > userLithium.expiry){
+      // token is expired
+      return { 
+        props: { 
+          tokenExpired: true
+        } 
+      }
+    }else{
+      // user is still logged in
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/`
+        },
+      };
+    }
+  }else{
+    return { 
+      props: { 
+        tokenExpired: true
+      } 
+    }
+  }
 }
